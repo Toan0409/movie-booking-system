@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#e60a15",
+                        "accent": "#facc15",
+                        "background-light": "#f8f5f6",
+                        "background-dark": "#221011",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #221011;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #392829;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e60a15;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<header class="sticky top-0 z-50 w-full border-b border-white/10 bg-background-dark/80 backdrop-blur-md px-6 md:px-20 py-4">
+<div class="max-w-[1400px] mx-auto flex items-center justify-between">
+<div class="flex items-center gap-12">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-4xl fill-icon">movie</span>
+<h1 class="text-2xl font-black tracking-tighter uppercase italic">Cine<span class="text-white">Pulse</span></h1>
+</div>
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-slate-100 hover:text-primary font-medium transition-colors" href="#">Movies</a>
+<a class="text-slate-100 hover:text-primary font-medium transition-colors" href="#">Cinemas</a>
+<a class="text-slate-100 hover:text-primary font-medium transition-colors" href="#">Promos</a>
+<a class="text-slate-100 hover:text-primary font-medium transition-colors" href="#">Food &amp; Drinks</a>
+</nav>
+</div>
+<div class="flex items-center gap-4 flex-1 justify-end max-w-xl">
+<div class="relative w-full max-w-xs hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-white/5 border border-white/10 rounded-full py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-sm" placeholder="Search movies..." type="text"/>
+</div>
+<button class="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full px-4 py-2 transition-all">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<span class="text-sm font-medium hidden md:inline">London, UK</span>
+</button>
+<button class="bg-primary hover:bg-primary/90 text-white font-bold py-2 px-6 rounded-full text-sm transition-transform active:scale-95 shadow-lg shadow-primary/20">
+                        Login
+                    </button>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<section class="relative w-full aspect-[21/9] min-h-[500px] flex items-end">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/40 to-transparent z-10"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-background-dark via-transparent to-transparent z-10"></div>
+<img class="w-full h-full object-cover" data-alt="Epic cinematic movie background with blue and orange lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy0WjybJApHP9qn1VP0VY5gh493kdYPw7VFlz_8eY_Ii9JT8_G4vC1LZ5X1246Se5aGjMBMCL55pCOgwRkdmc7nH3XPxhKf1tAXtCnw4qcC0PzmiN8FRG-hHHjgjrRcHqMhve-qEyWy2e-QN0X-E4HGScAlXX8-2-oNIfdJO0ZZ5XWa_Ry1cLX7Q0h03FkUl0ClF1IERp54eiuVkRQsejd00ZBdBbWPoSeGSsEEYazEwYycw06DGvw9mv_pCT2lCN4yaQt-dAh-OI"/>
+</div>
+<div class="relative z-20 px-6 md:px-20 pb-16 max-w-4xl">
+<div class="flex items-center gap-2 mb-4">
+<span class="bg-primary text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Now Trending</span>
+<span class="bg-accent text-background-dark text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">IMAX Special</span>
+</div>
+<h2 class="text-5xl md:text-7xl font-black text-white mb-4 leading-tight uppercase italic tracking-tighter">Beyond the Stars</h2>
+<p class="text-slate-300 text-lg mb-8 max-w-2xl line-clamp-3">The final frontier is closer than ever. Experience the breathtaking journey that redefined space travel in the highest definition possible. Exclusive 4D screenings available.</p>
+<div class="flex flex-wrap gap-4">
+<button class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-4 px-8 rounded-xl transition-all shadow-xl shadow-primary/30">
+<span class="material-symbols-outlined fill-icon">confirmation_number</span>
+                            Book Tickets Now
+                        </button>
+<button class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md font-bold py-4 px-8 rounded-xl transition-all border border-white/10">
+<span class="material-symbols-outlined">play_circle</span>
+                            Watch Trailer
+                        </button>
+</div>
+</div>
+<div class="absolute right-20 bottom-16 hidden lg:flex gap-2">
+<button class="size-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 text-white transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="size-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 text-white transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</section>
+<section class="px-6 md:px-20 py-16 max-w-[1440px] mx-auto">
+<div class="flex items-end justify-between mb-8">
+<div>
+<h3 class="text-3xl font-black uppercase italic text-white">Now Showing</h3>
+<p class="text-slate-400">Catch the latest blockbusters in theaters today</p>
+</div>
+<a class="text-primary font-bold hover:underline flex items-center gap-1" href="#">
+                        View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+<div class="group cursor-pointer">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden mb-4 shadow-lg group-hover:ring-2 ring-primary transition-all">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Dark action movie poster with protagonist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKVuMpsMxDimxnNv3MutmxW-m6WajWdzlaYDWTBKHV6pQhDIa-HiqUx7ZaxEVFoQac4I5XqrrkowpO_S06d1p5Hmpl8uGAiqkxk7i_GNWS2iMDXu_wISPNVXMxnKPl1IiqZDOHtiiMyhyemr3rrTYQJpSkuhwS24r8cqtj5I4htxtj0yGiZfc9FFQrpwol2dMK2a8F-mwmIfPHeLqr7H2az9KTJw0FVtu0PI1tFcoo-NYGA1jAsuZOfmeHML98HLq4ve4DLvaq6Fg"/>
+<div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md rounded-lg px-2 py-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-accent text-sm fill-icon">star</span>
+<span class="text-white text-xs font-bold">4.8</span>
+</div>
+<div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-primary text-white font-bold py-2 px-6 rounded-lg text-sm uppercase tracking-wider">Quick Book</button>
+</div>
+</div>
+<h4 class="text-white font-bold mb-1 group-hover:text-primary transition-colors truncate">Shadow Protocols</h4>
+<div class="flex items-center gap-2 text-xs text-slate-400 font-medium">
+<span class="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">C18</span>
+<span>142m</span>
+<span>•</span>
+<span>Action, Sci-Fi</span>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden mb-4 shadow-lg group-hover:ring-2 ring-primary transition-all">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Vibrant animated movie poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATA07SQAZYHhqpcre1slMNaNxsfF3Wc9RKDE9Ff_1OpF6utZVnUrzXs6u0EKQf6v0hXHTtZtYqGzPusEJVFHlHEL-JNWWTxLVSXS0GbXGd88HdKyS2iOz27ekcJCEX0_5VYaXv_MUR9CqQKI_OpWeMgHvAiB5lbu3eo3RkS_rxsD5AMYIuWBe-IfeHxYQ737Lah0oYHWVcrxfVDGy4OUHEJJMrLWLiMyrmiCwGQYyt2SCJVmJWSgB3Ha_ir1jGumC9AsCGHhT8Qzc"/>
+<div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md rounded-lg px-2 py-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-accent text-sm fill-icon">star</span>
+<span class="text-white text-xs font-bold">4.5</span>
+</div>
+<div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-primary text-white font-bold py-2 px-6 rounded-lg text-sm uppercase tracking-wider">Quick Book</button>
+</div>
+</div>
+<h4 class="text-white font-bold mb-1 group-hover:text-primary transition-colors truncate">Neon Dreams</h4>
+<div class="flex items-center gap-2 text-xs text-slate-400 font-medium">
+<span class="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">P</span>
+<span>105m</span>
+<span>•</span>
+<span>Animation, Comedy</span>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden mb-4 shadow-lg group-hover:ring-2 ring-primary transition-all">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Horror movie poster with dark moody silhouette" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR_-z8cvTwJoLjRvVBsdmXew2lwir6FZG-gBphn5qQV3Z1OxtAGj8hiNwrtI01icBRyQvi83byhpqSI127xCFHOqMa7BboJr4UOGR5WbeKfF4PFavaHXiVn3oRT10UufU1iTT2Hs1Gs-70yGXxE_GldXNyYH6eCRNQjKV3WZEV3uhvtv16KpuPzI067WQlZTdpCAsDXBUtnDTYHgA-F4Nxe8lMyLGeZEOJYc4JH9gsBafDEVkf5sXA2bEBSv2YERCPHU09e50Po2g"/>
+<div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md rounded-lg px-2 py-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-accent text-sm fill-icon">star</span>
+<span class="text-white text-xs font-bold">4.2</span>
+</div>
+<div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-primary text-white font-bold py-2 px-6 rounded-lg text-sm uppercase tracking-wider">Quick Book</button>
+</div>
+</div>
+<h4 class="text-white font-bold mb-1 group-hover:text-primary transition-colors truncate">Whisper in the Dark</h4>
+<div class="flex items-center gap-2 text-xs text-slate-400 font-medium">
+<span class="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">C16</span>
+<span>118m</span>
+<span>•</span>
+<span>Horror, Thriller</span>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden mb-4 shadow-lg group-hover:ring-2 ring-primary transition-all">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Historical drama movie poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCkNbE05_-Pb7Mau5UkXn9D8i459h85yEEWPTaypJQVXFSjQ1w_FydPJ9-vD78uh4zrdQgxKQ_wKeK6av3qq_Ey9-1VcmajP09LvSS6x1y-rq9zcdluOahr_t1qpw6T6m_ARLWfsYqnxj2dFA3laW6zIxKbS1B28rnhV_cJEbyVqUlQspJ_wBL-zWiOHpiXG93ERZOEtOlO6W8UKHSOkg1jeDnPJeZ7hS87QDKMc5_SSpmZtZHCsJjoFs81Yt7Af3LLt6eFXzVxcQ"/>
+<div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md rounded-lg px-2 py-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-accent text-sm fill-icon">star</span>
+<span class="text-white text-xs font-bold">4.9</span>
+</div>
+<div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-primary text-white font-bold py-2 px-6 rounded-lg text-sm uppercase tracking-wider">Quick Book</button>
+</div>
+</div>
+<h4 class="text-white font-bold mb-1 group-hover:text-primary transition-colors truncate">The Last Emperor</h4>
+<div class="flex items-center gap-2 text-xs text-slate-400 font-medium">
+<span class="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">C13</span>
+<span>156m</span>
+<span>•</span>
+<span>Drama, History</span>
+</div>
+</div>
+<div class="group cursor-pointer">
+<div class="relative aspect-[2/3] rounded-xl overflow-hidden mb-4 shadow-lg group-hover:ring-2 ring-primary transition-all">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Romantic comedy movie poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQh30q0mHyUUVj6Y_hAB9aHiPfDlGOytHqs7yiuc7FFc3AmLY8qZCZ4XF99H6MArWsWcTCZ16Q1vYWP4tyyRFrlcP3HZvFOoYEltFPOl_AStsuVtB7Ohf9Ws8jpE11UgpBwzySSagqMO7sDVxH4RUTZBr5wqIfNXiXehpV2HBy8YwLm-ikFZ6QOWtjGtbtAFoLkBi0Xv4IKB_DLmEb2HttShBNhGp8vcG_Cct4rvECPzHK3Pyy24YkULzW7QKum0R1ZY7N9Br20To"/>
+<div class="absolute top-3 right-3 bg-black/60 backdrop-blur-md rounded-lg px-2 py-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-accent text-sm fill-icon">star</span>
+<span class="text-white text-xs font-bold">4.0</span>
+</div>
+<div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="bg-primary text-white font-bold py-2 px-6 rounded-lg text-sm uppercase tracking-wider">Quick Book</button>
+</div>
+</div>
+<h4 class="text-white font-bold mb-1 group-hover:text-primary transition-colors truncate">Summer in Paris</h4>
+<div class="flex items-center gap-2 text-xs text-slate-400 font-medium">
+<span class="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">P</span>
+<span>92m</span>
+<span>•</span>
+<span>Romance, Comedy</span>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-primary/5 py-16 border-y border-white/5">
+<div class="px-6 md:px-20 max-w-[1440px] mx-auto">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-2xl font-black uppercase italic text-white flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">upcoming</span>
+                            Coming Soon
+                        </h3>
+<div class="flex gap-2">
+<button class="size-8 rounded-lg border border-white/10 flex items-center justify-center hover:bg-white/5 text-white transition-all">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="size-8 rounded-lg border border-white/10 flex items-center justify-center hover:bg-white/5 text-white transition-all">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex gap-6 overflow-x-auto pb-4 [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<div class="min-w-[300px] flex gap-4 bg-white/5 p-4 rounded-xl border border-white/5 hover:border-primary/30 transition-all cursor-pointer">
+<div class="w-24 aspect-[2/3] rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Sci-fi movie poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWkyHFecdb7jWDOpawxAZfAM21FZZg1VunQfPFCNBbl9rA0Fxzkc-3RALeyEzpHUeQpy2jMRZ8IAP8Yx7gNvq-MXZNo5HYBnvFtsxTVonprKHE0VNxDfTare7RELOCiLtpXnPOKhJifSQwVJa0a26poMQezjuHzHpY5UREecZZRmsMOHd8e2-1Dg36QF6QLEeT3j5SyHLpmVYtZNEC3VMGBVPHsFTpXqc0WUQ2GWdQpeiHekeg2ltTUxAkSYjwMvPo9qoctvMQfi0"/>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1">Coming Nov 15</p>
+<h4 class="text-white font-bold text-lg leading-tight mb-2">Solar Winds</h4>
+<div class="flex gap-2 items-center text-xs text-slate-400">
+<span class="bg-white/10 px-1.5 py-0.5 rounded">C13</span>
+<span>Adventure</span>
+</div>
+</div>
+</div>
+<div class="min-w-[300px] flex gap-4 bg-white/5 p-4 rounded-xl border border-white/5 hover:border-primary/30 transition-all cursor-pointer">
+<div class="w-24 aspect-[2/3] rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Action movie poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjOr8MNenF8GfSVrbOCagfiUlGfzVfWwJSoBUZfQ_AG7mmzCFuAAA4K7aXqLvGVvclIimJsuje9Y2F2fmvzcbATR1qLzzVAbujWnOcBlaMmoI_Oof3hrqwRgA5miE2s6w8m1bkZ3rxLUeTbEew1GVDT9T7otEko3Ahq8FFe1MVQXWdr0bQpQjZdKFcvNVsaGM6slN8Aw-WsTXaP2RQuRqjKhQAGWirJwXiQrgn0yozCcRHR6qLuIFtezzwiADH2UlHSfSF1UiU2WI"/>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1">Coming Dec 02</p>
+<h4 class="text-white font-bold text-lg leading-tight mb-2">Ghost Agent</h4>
+<div class="flex gap-2 items-center text-xs text-slate-400">
+<span class="bg-white/10 px-1.5 py-0.5 rounded">C18</span>
+<span>Crime</span>
+</div>
+</div>
+</div>
+<div class="min-w-[300px] flex gap-4 bg-white/5 p-4 rounded-xl border border-white/5 hover:border-primary/30 transition-all cursor-pointer">
+<div class="w-24 aspect-[2/3] rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Animation movie poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtlovIxVhnz0o0OCzV7bxN9xAQUBjMXTY-G0BJqFeVvG0y7i_OKPGjAKe3ZwP7wvl1tLLeG0zrieVBMlfDSpvye9ltZpIY4zXbdA-aFJrMA1_-VUj3UubKztwH-o06EUzA8Bt_xSxGvLJcwC6SCUGM9gY3muHRlas4lWSN5EsRzd3mbYULAHzM8N3-CCGLjZ2D_qKHVrBNv3F25hHOb5o8QipnaOSqcYKaUVUAAuxz-hQ6jgwHYdRsCKY2cQkkzQur2X8X7Ef6JfU"/>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1">Coming Dec 18</p>
+<h4 class="text-white font-bold text-lg leading-tight mb-2">Pixel Wars</h4>
+<div class="flex gap-2 items-center text-xs text-slate-400">
+<span class="bg-white/10 px-1.5 py-0.5 rounded">P</span>
+<span>Family</span>
+</div>
+</div>
+</div>
+<div class="min-w-[300px] flex gap-4 bg-white/5 p-4 rounded-xl border border-white/5 hover:border-primary/30 transition-all cursor-pointer">
+<div class="w-24 aspect-[2/3] rounded-lg overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Fantasy movie poster" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6w7QigsIUuUUw0hIcZ7HS_9XbaYHX2b9P_vmooTOMnCA-Oz9zRrsAkwH-C1y5w_COgkQc_yP_g7Xs0bxQ265wkzmOL1JddmrVbFYQuD2Wab_V4NM2qE4cmmeXSuzHGaKFugdnnulan6P7qrlqQ7-4KMPTMlRnOaJbZwsSEYjRDLG2G-AOIV1X4XcISJXxB8hmHz8Die7Hx-wWUi3K5EQSDJmP_AcTmLJmuPyVwF1qQB9pd2kKgkxWNe7ozzxPcoS1GDTmERajqg8"/>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-primary text-[10px] font-bold uppercase tracking-widest mb-1">Coming Jan 05</p>
+<h4 class="text-white font-bold text-lg leading-tight mb-2">Mythical Beasts</h4>
+<div class="flex gap-2 items-center text-xs text-slate-400">
+<span class="bg-white/10 px-1.5 py-0.5 rounded">C13</span>
+<span>Fantasy</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="px-6 md:px-20 py-20 max-w-[1440px] mx-auto">
+<div class="grid lg:grid-cols-2 gap-12 items-center">
+<div class="relative rounded-2xl overflow-hidden aspect-video shadow-2xl">
+<img class="w-full h-full object-cover" data-alt="Modern cinema interior with red seats" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8PJ5Me060fbr9BRz91qiKe-9rMdV9CsJxCV9laHS3IKyLqDZvTWPJe7_Mnx12nBgW4GKFzUqv8wVsq0yH9y9fURR3qK_uco0XKmCtYalTtwHWYdM3uFrMD8eowesX3tMGr49zwMbjBdr_dWNTOE6vUnhFEQ9rc6N56VxNXzwvwL-39qjSk-i7YM29gdr_fnMkKW5jXodp1in6GZgwI-OiouWQDkFtVRv8GRBTqxM2RWxG8Rj-23AC5No5HYRvfdYkMA79wVHsA4w"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6 flex items-center justify-between">
+<div>
+<h5 class="text-white font-bold text-xl">Westside Cinema Complex</h5>
+<p class="text-slate-300 text-sm">4.5 miles away from you</p>
+</div>
+<button class="bg-white text-background-dark font-bold py-2 px-4 rounded-lg text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">directions</span>
+                                Get Directions
+                            </button>
+</div>
+</div>
+<div>
+<h3 class="text-3xl font-black uppercase italic text-white mb-6">Find Your Cinema</h3>
+<p class="text-slate-400 mb-8 text-lg">Choose your preferred location to see specific showtimes and special screenings. We have 45 locations nationwide featuring Dolby Atmos and IMAX theaters.</p>
+<div class="space-y-4">
+<div class="p-4 bg-white/5 border border-white/10 rounded-xl flex items-center justify-between hover:border-primary transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div>
+<p class="text-white font-bold">City Center Mall</p>
+<p class="text-xs text-slate-500">2.1 miles • 14 Screens • IMAX</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary">arrow_forward_ios</span>
+</div>
+<div class="p-4 bg-white/5 border border-white/10 rounded-xl flex items-center justify-between hover:border-primary transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<div>
+<p class="text-white font-bold">River District Cinema</p>
+<p class="text-xs text-slate-500">3.8 miles • 8 Screens • 4DX</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-500 group-hover:text-primary">arrow_forward_ios</span>
+</div>
+<button class="w-full py-4 border-2 border-dashed border-white/10 rounded-xl text-slate-400 font-bold hover:border-primary/50 hover:text-white transition-all">
+                                See More Locations
+                            </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-black py-16 px-6 md:px-20 border-t border-white/5">
+<div class="max-w-[1400px] mx-auto">
+<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+<div class="col-span-1 lg:col-span-1">
+<div class="flex items-center gap-2 text-primary mb-6">
+<span class="material-symbols-outlined text-4xl fill-icon">movie</span>
+<h2 class="text-2xl font-black tracking-tighter uppercase italic">Cine<span class="text-white">Pulse</span></h2>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed mb-6">Redefining the movie-going experience with state-of-the-art technology and unmatched comfort since 1998.</p>
+<div class="flex gap-4">
+<a class="size-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined">share</span>
+</a>
+<a class="size-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined">camera</span>
+</a>
+<a class="size-10 rounded-full bg-white/5 flex items-center justify-center text-slate-300 hover:bg-primary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined">video_library</span>
+</a>
+</div>
+</div>
+<div>
+<h6 class="text-white font-bold uppercase tracking-widest mb-6">Movies</h6>
+<ul class="space-y-4 text-slate-400 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Now Showing</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Coming Soon</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">IMAX Experience</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Movie Archive</a></li>
+</ul>
+</div>
+<div>
+<h6 class="text-white font-bold uppercase tracking-widest mb-6">Support</h6>
+<ul class="space-y-4 text-slate-400 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Help Center</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Contact Us</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Refund Policy</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">FAQs</a></li>
+</ul>
+</div>
+<div>
+<h6 class="text-white font-bold uppercase tracking-widest mb-6">Newsletter</h6>
+<p class="text-slate-400 text-sm mb-4">Get exclusive offers and movie updates.</p>
+<div class="flex gap-2">
+<input class="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:ring-1 focus:ring-primary outline-none" placeholder="Email address" type="email"/>
+<button class="bg-primary text-white p-2 rounded-lg hover:bg-primary/90 transition-all">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+<div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-slate-500 text-xs">© 2024 CinePulse Media Group. All rights reserved.</p>
+<div class="flex gap-6 text-xs text-slate-500">
+<a class="hover:text-white" href="#">Privacy Policy</a>
+<a class="hover:text-white" href="#">Terms of Service</a>
+<a class="hover:text-white" href="#">Cookie Settings</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>
