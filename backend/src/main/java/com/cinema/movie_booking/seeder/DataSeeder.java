@@ -233,10 +233,11 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     private void seedTheatersForCinema(Cinema cinema) {
+        String cinemaName = cinema.getName();
         List<TheaterConfig> cfgs = List.of(
-                new TheaterConfig("Phong 1 - Standard", TheaterType.STANDARD, 10, 10),
-                new TheaterConfig("Phong 2 - VIP", TheaterType.VIP, 8, 8),
-                new TheaterConfig("Phong 3 - IMAX", TheaterType.IMAX, 12, 12));
+                new TheaterConfig("Phong 1 - Standard - " + cinemaName, TheaterType.STANDARD, 10, 10),
+                new TheaterConfig("Phong 2 - VIP - " + cinemaName, TheaterType.VIP, 8, 8),
+                new TheaterConfig("Phong 3 - IMAX - " + cinemaName, TheaterType.IMAX, 12, 12));
         for (TheaterConfig cfg : cfgs) {
             Theater t = theaterRepository.save(Theater.builder()
                     .name(cfg.name).theaterType(cfg.type)

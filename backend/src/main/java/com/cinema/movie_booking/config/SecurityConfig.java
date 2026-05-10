@@ -105,7 +105,7 @@ public class SecurityConfig {
                         .permitAll()
 
                         // Chỉ ADMIN mới được truy cập /api/admin/**
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "STAFF")
 
                         // Các API khác yêu cầu xác thực
                         .anyRequest().authenticated())
