@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/admin/bookings")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
 @RequiredArgsConstructor
 @Validated
 public class BookingAdminController {

@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MovieBookingApplication<movie-booking>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.cinema.movie_booking.MovieBookingApplication",
+            "projectName": "movie-booking",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

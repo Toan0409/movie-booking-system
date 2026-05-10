@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/admin/genres")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
 @RequiredArgsConstructor
 public class GenreAdminController {
     private final GenreService genreService;

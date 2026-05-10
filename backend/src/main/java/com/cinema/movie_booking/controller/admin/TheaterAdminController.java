@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/admin/theaters")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
 @AllArgsConstructor
 public class TheaterAdminController {
     private final TheaterService theaterService;

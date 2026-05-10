@@ -21,7 +21,7 @@ import java.time.LocalDate;
  */
 @RestController
 @RequestMapping("/api/admin/showtimes")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
 @AllArgsConstructor
 public class ShowtimeAdminController {
 

@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/admin/cinemas")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
 @RequiredArgsConstructor
 public class CinemaAdminController {
 
