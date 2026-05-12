@@ -1,6 +1,7 @@
 package com.cinema.movie_booking.service.impl;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cinema.movie_booking.config.VNPayConfig;
+import com.cinema.movie_booking.dto.email.BookingEmailData;
 import com.cinema.movie_booking.dto.payment.PaymentResponseDTO;
 import com.cinema.movie_booking.entity.Booking;
 import com.cinema.movie_booking.entity.BookingDetail;
@@ -23,6 +25,7 @@ import com.cinema.movie_booking.repository.BookingDetailRepository;
 import com.cinema.movie_booking.repository.BookingRepository;
 import com.cinema.movie_booking.repository.PaymentRepository;
 import com.cinema.movie_booking.repository.TicketRepository;
+import com.cinema.movie_booking.service.EmailService;
 import com.cinema.movie_booking.service.PaymentService;
 import com.cinema.movie_booking.util.VNPayUtil;
 
@@ -40,6 +43,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final BookingDetailRepository bookingDetailRepository;
     private final TicketRepository ticketRepository;
+    private final EmailService emailService;
 
     // =========================================================================
     // 1. Tao VNPAY Payment URL
@@ -198,6 +202,7 @@ public class PaymentServiceImpl implements PaymentService {
     // =========================================================================
 
     @Override
+    @Transactional
     public PaymentResponseDTO handleVNPayReturn(Map<String, String> params) {
 
         log.info("[Return] Nhan Return URL: {} params", params.size());
@@ -293,6 +298,13 @@ public class PaymentServiceImpl implements PaymentService {
 
         // Tao Tickets cho cac BookingDetail
         createTicketsForBooking(booking);
+
+        // Build email DTO trong transaction (eager-load toan bo data can thiet)
+        // Tranh LazyInitializationException khi async thread chay sau khi session dong
+        BookingEmailData emailData = buildEmailData(booking);
+
+        // Gui email async (khong block transaction)
+        emailService.sendBookingConfirmationEmail(emailData);
     }
 
     // Cap nhat DB khi thanh toan that bai
@@ -332,6 +344,48 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         log.info("[Payment] Da tao {} ticket cho booking {}", created, booking.getBookingCode());
+    }
+
+    // Xay dung BookingEmailData trong transaction de tranh LazyInitializationException khi async
+    private BookingEmailData buildEmailData(Booking booking) {
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm - dd/MM/yyyy");
+
+        String userName = booking.getUser().getFullName() != null
+                ? booking.getUser().getFullName()
+                : booking.getUser().getUsername();
+
+        // Tai lai danh sach BookingDetail + Ticket tu DB (sau khi createTicketsForBooking da save)
+        List<BookingDetail> freshDetails = bookingDetailRepository.findByBooking_BookingId(booking.getBookingId());
+        Map<Long, Ticket> ticketByDetailId = ticketRepository
+                .findByBookingDetail_Booking_BookingId(booking.getBookingId())
+                .stream()
+                .collect(java.util.stream.Collectors.toMap(
+                        t -> t.getBookingDetail().getBookingDetailId(),
+                        t -> t));
+
+        List<BookingEmailData.TicketRow> rows = freshDetails.stream()
+                .map(d -> {
+                    String seatCode = d.getSeat() != null ? d.getSeat().getSeatCode() : "-";
+                    Ticket ticket = ticketByDetailId.get(d.getBookingDetailId());
+                    String ticketCode = ticket != null ? ticket.getTicketCode() : "-";
+                    return new BookingEmailData.TicketRow(seatCode, ticketCode, d.getSubtotal());
+                })
+                .toList();
+
+        return new BookingEmailData(
+                booking.getUser().getEmail(),
+                userName,
+                booking.getBookingCode(),
+                booking.getShowtime().getMovie().getTitle(),
+                booking.getShowtime().getTheater().getCinema().getName(),
+                booking.getShowtime().getTheater().getName(),
+                booking.getShowtime().getStartTime().format(fmt),
+                booking.getShowtime().getEndTime().format(fmt),
+                booking.getTotalAmount(),
+                booking.getDiscountAmount() != null ? booking.getDiscountAmount() : 0.0,
+                booking.getFinalAmount(),
+                rows
+        );
     }
 
     // Build IPN response JSON theo chuan VNPAY
