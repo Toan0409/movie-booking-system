@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CreditCard, Shield, Clock, CheckCircle } from 'lucide-react';
 import paymentApi from '../api/paymentApi';
+import bookingApi from '../api/bookingApi';
 
 const PaymentPage = () => {
     const location = useLocation();
@@ -88,6 +89,19 @@ const PaymentPage = () => {
             setError(msg);
             setLoading(false);
         }
+    };
+
+    const handleCancel = async () => {
+        const code = bookingData?.bookingCode || booking?.bookingCode;
+        if (code) {
+            try {
+                setLoading(true);
+                await bookingApi.cancelBooking(code);
+            } catch {
+                // Booking co the da bi huy hoac het han, bo qua loi
+            }
+        }
+        navigate('/', { replace: true });
     };
 
     if (!booking) return null;
@@ -269,7 +283,7 @@ const PaymentPage = () => {
                             </button>
 
                             <button
-                                onClick={() => navigate(-1)}
+                                onClick={handleCancel}
                                 disabled={loading}
                                 className="w-full mt-3 bg-white/10 hover:bg-white/20 disabled:opacity-50 text-white font-medium py-3 rounded-xl transition-all border border-white/10"
                             >

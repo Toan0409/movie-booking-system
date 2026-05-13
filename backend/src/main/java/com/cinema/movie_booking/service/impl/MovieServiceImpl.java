@@ -14,7 +14,9 @@ import com.cinema.movie_booking.repository.MovieRepository;
 import com.cinema.movie_booking.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,7 +86,11 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Page<MovieResponseDTO> getAllMovies(Pageable pageable) {
-        return movieRepository.findByIsDeletedFalse(pageable)
+        Pageable sortedPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                Sort.by("movieId").descending());
+        return movieRepository.findByIsDeletedFalse(sortedPageable)
                 .map(this::mapToResponseDTO);
     }
 

@@ -61,6 +61,7 @@ movie-booking-system/
 
 * Đăng ký / đăng nhập
 * Xem phim, tìm kiếm phim
+* Chatbot gợi ý phim thông minh dựa trên từ khoá + AI Gemini
 * Xem lịch chiếu
 * Chọn ghế
 * Đặt vé

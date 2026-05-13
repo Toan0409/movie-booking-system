@@ -5,6 +5,9 @@ const bookingApi = {
     createBooking: (userId, data) =>
         axiosClient.post('/bookings', data, { params: { userId } }),
 
+    // Client: cancel booking (giai phong ghe ngay lap tuc)
+    cancelBooking: (bookingCode) =>
+        axiosClient.delete(`/bookings/${bookingCode}`),
 
     // Admin: get all bookings
     getAllBookings: () =>

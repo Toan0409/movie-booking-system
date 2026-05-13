@@ -3,6 +3,7 @@ package com.cinema.movie_booking.controller.client;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,12 @@ public class BookingController {
             @RequestParam Long userId) {
         List<BookingResponseDTO> bookings = bookingService.getUserBookings(userId);
         return ResponseEntity.ok(ApiResponse.success(bookings, "Lấy lịch sử đặt vé thành công"));
+    }
+
+    @DeleteMapping("/{bookingCode}")
+    public ResponseEntity<ApiResponse<Void>> cancelBooking(@PathVariable String bookingCode) {
+        bookingService.cancelBooking(bookingCode);
+        return ResponseEntity.ok(ApiResponse.success(null, "Hủy vé thành công"));
     }
 
 }

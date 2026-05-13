@@ -71,6 +71,10 @@ public class PaymentServiceImpl implements PaymentService {
             throw new BadRequestException("Booking da het han. Vui long dat ve lai.");
         }
 
+        // Gia han cua so thanh toan moi lan tao URL (tranh auto-expire khi dang thanh toan)
+        booking.setExpiryDate(LocalDateTime.now().plusMinutes(15));
+        bookingRepository.save(booking);
+
         // 4. Tao hoac reset Payment record
         if (!paymentRepository.existsByBooking_BookingId(bookingId)) {
             Payment payment = Payment.builder()
@@ -178,6 +182,10 @@ public class PaymentServiceImpl implements PaymentService {
             log.info("[IPN] Booking {} da PAID truoc do, bo qua", bookingCode);
             return buildIpnResponse("02", "Order already confirmed");
         }
+        if (BookingStatus.CANCELLED.name().equals(booking.getStatus())) {
+            log.info("[IPN] Booking {} da CANCELLED truoc do (xu ly qua Return URL), bo qua", bookingCode);
+            return buildIpnResponse("02", "Order already cancelled");
+        }
 
         // 5. Xu ly theo ket qua giao dich
         String responseCode = params.get("vnp_ResponseCode");
@@ -187,6 +195,10 @@ public class PaymentServiceImpl implements PaymentService {
         if ("00".equals(responseCode) && "00".equals(transactionStatus)) {
             processPaymentSuccess(booking, transactionNo, params);
             log.info("[IPN] THANH CONG: booking={}, transactionNo={}", bookingCode, transactionNo);
+        } else if ("24".equals(responseCode)) {
+            // User chu dong huy tren VNPAY → giu ghe them 10 phut cho phep thu lai
+            holdBookingAfterUserCancel(booking, transactionNo);
+            log.info("[IPN] User huy tren VNPAY: booking={}", bookingCode);
         } else {
             processPaymentFailed(booking, transactionNo, responseCode);
             log.info("[IPN] THAT BAI: booking={}, responseCode={}", bookingCode, responseCode);
@@ -255,7 +267,30 @@ public class PaymentServiceImpl implements PaymentService {
                     .responseCode(responseCode)
                     .message("Thanh toan thanh cong!")
                     .build();
+        } else if ("24".equals(responseCode)) {
+            // User chu dong huy tren VNPAY → giu ghe them 10 phut cho phep thu lai
+            Booking cancelledBooking = bookingRepository.findByBookingCode(bookingCode).orElse(null);
+            if (cancelledBooking != null && BookingStatus.PENDING.name().equals(cancelledBooking.getStatus())) {
+                holdBookingAfterUserCancel(cancelledBooking, transactionNo);
+                log.info("[Return] User huy tren VNPAY, giu booking {} them 10 phut", bookingCode);
+            }
+            return PaymentResponseDTO.builder()
+                    .status("CANCELLED")
+                    .bookingCode(bookingCode)
+                    .transactionId(transactionNo)
+                    .amount(amount)
+                    .bankCode(bankCode)
+                    .cardType(cardType)
+                    .responseCode(responseCode)
+                    .message("Ban da huy giao dich. Ghe duoc giu them 10 phut de thu lai.")
+                    .build();
         } else {
+            // Loi khac → huy booking ngay de giai phong ghe
+            Booking failedBooking = bookingRepository.findByBookingCode(bookingCode).orElse(null);
+            if (failedBooking != null && BookingStatus.PENDING.name().equals(failedBooking.getStatus())) {
+                processPaymentFailed(failedBooking, transactionNo, responseCode);
+                log.info("[Return] Da huy booking {} do loi thanh toan ({})", bookingCode, responseCode);
+            }
             return PaymentResponseDTO.builder()
                     .status("FAILED")
                     .bookingCode(bookingCode)
@@ -307,16 +342,31 @@ public class PaymentServiceImpl implements PaymentService {
         emailService.sendBookingConfirmationEmail(emailData);
     }
 
-    // Cap nhat DB khi thanh toan that bai
+    // User chu dong huy tren VNPAY (responseCode=24) → giu ghe PENDING them 10 phut
+    private void holdBookingAfterUserCancel(Booking booking, String transactionNo) {
+        booking.setExpiryDate(LocalDateTime.now().plusMinutes(10));
+        bookingRepository.save(booking);
+
+        paymentRepository.findByBooking_BookingId(booking.getBookingId()).ifPresent(p -> {
+            p.setStatus("FAILED");
+            p.setTransactionId(transactionNo);
+            p.setPaymentNote("User huy tren VNPAY. Co the thu lai trong 10 phut.");
+            paymentRepository.save(p);
+        });
+    }
+
+    // Cap nhat DB khi thanh toan that bai — huy booking ngay de giai phong ghe
     private void processPaymentFailed(Booking booking, String transactionNo, String responseCode) {
 
-        // Chi cap nhat neu booking van con PENDING
+        // Chuyen thang PENDING -> CANCELLED (bo qua FAILED) de ghe duoc giai phong ngay
         if (BookingStatus.PENDING.name().equals(booking.getStatus())) {
-            booking.setStatus(BookingStatus.FAILED.name());
+            booking.setStatus(BookingStatus.CANCELLED.name());
             bookingRepository.save(booking);
+            log.info("[Payment] Booking {} da bi huy ngay sau khi thanh toan that bai (responseCode={})",
+                    booking.getBookingCode(), responseCode);
         }
 
-        // Cap nhat Payment record -> FAILED
+        // Cap nhat Payment record -> FAILED (ghi nhan lich su giao dich)
         paymentRepository.findByBooking_BookingId(booking.getBookingId()).ifPresent(payment -> {
             payment.setStatus("FAILED");
             payment.setTransactionId(transactionNo);

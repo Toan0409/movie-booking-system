@@ -3,11 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
     User, Ticket, Heart, History, Settings, LogOut,
     Star, Edit2, Save, X, Loader, AlertCircle, Film,
-    MapPin, Clock, CheckCircle, XCircle, Calendar,
+    MapPin, Clock, CheckCircle, XCircle, Calendar, CreditCard,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import userApi from '../api/userApi';
 import bookingApi from '../api/bookingApi';
+import paymentApi from '../api/paymentApi';
 
 const MENU_ITEMS = [
     { key: 'info', label: 'Thông tin tài khoản', icon: User },
@@ -62,6 +63,7 @@ const ProfilePage = () => {
 
     const [bookings, setBookings] = useState([]);
     const [bookingsLoading, setBookingsLoading] = useState(false);
+    const [retryingId, setRetryingId] = useState(null);
 
     const [form, setForm] = useState({ fullName: '', phone: '', email: '' });
 
@@ -114,26 +116,33 @@ const ProfilePage = () => {
 
     const handleLogout = () => { logout(); navigate('/'); };
 
+    const handleRetryPayment = async (booking) => {
+        setRetryingId(booking.bookingId);
+        try {
+            const res = await paymentApi.createVNPayUrl(booking.bookingId);
+            const paymentUrl = res.data?.data?.paymentUrl || res.data?.paymentUrl;
+            if (paymentUrl) {
+                window.location.href = paymentUrl;
+            }
+        } catch (err) {
+            const msg = err.response?.data?.message || 'Không thể tạo liên kết thanh toán. Vui lòng thử lại.';
+            try {
+                const r = await bookingApi.getBookingsByUser(user.userId);
+                setBookings(r.data?.data || []);
+            } catch { /* ignore */ }
+            alert(msg);
+            setRetryingId(null);
+        }
+    };
+
     if (!user) return null;
 
     const initials = (user.fullName || 'U')
         .split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
 
-    // Separate upcoming vs past bookings
-    const now = new Date();
-    const upcomingBookings = bookings.filter(b => {
-        const st = b.showtime?.startTime || b.startTime;
-        return st && new Date(st) > now && b.status !== 'PAID';
-    });
-    const pastBookings = bookings.filter(b => {
-        const st = b.showtime?.startTime || b.startTime;
-        return (
-            !st ||
-            new Date(st) <= now ||
-            b.status === 'CANCELLED' ||
-            b.status === 'FAILED'
-        );
-    });
+    const sortedBookings = [...bookings].sort(
+        (a, b) => new Date(b.bookingDate || 0) - new Date(a.bookingDate || 0)
+    );
 
     const BookingCard = ({ booking }) => {
         const statusInfo = STATUS_MAP[booking.status] || STATUS_MAP.PENDING;
@@ -196,6 +205,26 @@ const ProfilePage = () => {
 
                 {booking.bookingCode && (
                     <p className="text-slate-500 text-xs mt-2">Mã đặt vé: <span className="text-slate-300 font-mono">{booking.bookingCode}</span></p>
+                )}
+
+                {booking.status === 'PENDING' && (
+                    <div className="mt-3 pt-3 border-t border-white/10">
+                        {booking.expiryDate && new Date(booking.expiryDate) > new Date() ? (
+                            <button
+                                onClick={() => handleRetryPayment(booking)}
+                                disabled={retryingId === booking.bookingId}
+                                className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 disabled:opacity-60 text-white text-sm font-bold py-2 rounded-lg transition-all"
+                            >
+                                {retryingId === booking.bookingId
+                                    ? <Loader className="w-4 h-4 animate-spin" />
+                                    : <CreditCard className="w-4 h-4" />
+                                }
+                                Tiếp tục thanh toán
+                            </button>
+                        ) : (
+                            <p className="text-slate-500 text-xs text-center">Đặt vé đã hết hạn thanh toán</p>
+                        )}
+                    </div>
                 )}
             </div>
         );
@@ -357,9 +386,9 @@ const ProfilePage = () => {
                                             <div key={i} className="h-24 bg-white/5 rounded-xl animate-pulse"></div>
                                         ))}
                                     </div>
-                                ) : bookings.length > 0 ? (
+                                ) : sortedBookings.length > 0 ? (
                                     <div className="space-y-3">
-                                        {pastBookings.map((b, i) => (
+                                        {sortedBookings.map((b, i) => (
                                             <BookingCard key={b.bookingId || i} booking={b} />
                                         ))}
                                     </div>
