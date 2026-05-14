@@ -15,7 +15,6 @@ export const useNowShowing = () => {
             setLoading(true);
             setError(null);
             const response = await movieApi.getNowShowing();
-            console.log("Now Showing API:", response.data);
             // Handle the API response structure
             if (response.data && response.data.success) {
                 setMovies(response.data.data.content || []);

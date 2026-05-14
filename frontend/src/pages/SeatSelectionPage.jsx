@@ -110,7 +110,9 @@ const SeatSelectionPage = () => {
 
         // Lay userId tu localStorage (AuthContext luu khi login)
         const userId = localStorage.getItem('userId');
+
         if (!userId) {
+
             navigate('/login', { state: { from: `/booking/${showtimeId}` } });
             return;
         }
@@ -123,21 +125,26 @@ const SeatSelectionPage = () => {
                 notes: '',
             };
 
+
             // Buoc 1: Tao booking (trang thai PENDING)
             const response = await bookingApi.createBooking(userId, bookingData);
             const bookingResult = response.data;
 
+
             // Buoc 2: Chuyen sang trang thanh toan VNPAY
-            navigate('/payment', {
-                state: {
-                    booking: bookingResult,
-                    showtime,
-                    selectedSeats,
-                    total: calculateTotal(),
-                }
-            });
+            // Luu vao sessionStorage de fallback khi location.state bi mat (nginx production)
+            const paymentState = {
+                booking: bookingResult,
+                showtime,
+                selectedSeats,
+                total: calculateTotal(),
+            };
+            sessionStorage.setItem('pendingPayment', JSON.stringify(paymentState));
+
+
+            navigate('/payment', { state: paymentState });
         } catch (err) {
-            console.error('Booking error:', err);
+            console.error('[DEBUG][ERR] Booking error:', err);
             const msg = err.response?.data?.message || 'Đặt vé thất bại. Vui lòng thử lại.';
             alert(msg);
         } finally {

@@ -31,6 +31,7 @@ const PaymentResultPage = () => {
                 const response = await paymentApi.handleVNPayReturn(params);
                 const data = response.data?.data || response.data;
 
+                sessionStorage.removeItem('pendingPayment');
                 setResult(data);
 
                 // Xac dinh trang thai dua tren responseCode

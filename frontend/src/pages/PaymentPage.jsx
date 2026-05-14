@@ -4,11 +4,27 @@ import { ArrowLeft, CreditCard, Shield, Clock, CheckCircle } from 'lucide-react'
 import paymentApi from '../api/paymentApi';
 import bookingApi from '../api/bookingApi';
 
+const readPaymentState = (locationState) => {
+    if (locationState) return locationState;
+    try {
+        const saved = sessionStorage.getItem('pendingPayment');
+        return saved ? JSON.parse(saved) : null;
+    } catch {
+        return null;
+    }
+};
+
 const PaymentPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const { booking, showtime, selectedSeats, total } = location.state || {};
+    const paymentState = readPaymentState(location.state);
+    const { booking, showtime, selectedSeats, total } = paymentState || {};
+
+    
+
+    // Unwrap API response: backend tra { success, data: { bookingId, ... } } hoac truc tiep { bookingId, ... }
+    const bookingData = booking?.data || booking;
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -16,11 +32,17 @@ const PaymentPage = () => {
 
     // Tinh thoi gian con lai cua booking (expiryDate)
     useEffect(() => {
-        if (!booking?.expiryDate) return;
+        if (!bookingData?.expiryDate) return;
 
         const updateCountdown = () => {
             const now = new Date();
-            const expiry = new Date(booking.expiryDate);
+            // Parse naive datetime as local time (backend serializes LocalDateTime in server timezone).
+            // Appending no suffix keeps browser interpretation as local, matching TZ=Asia/Ho_Chi_Minh set in Docker.
+            const raw = bookingData.expiryDate;
+            const expiry = new Date(
+                /[Z+\-]\d{2}:?\d{2}$/.test(raw) ? raw : raw + '+07:00'
+            );
+            if (isNaN(expiry.getTime())) return;
             const diff = Math.max(0, Math.floor((expiry - now) / 1000));
             setCountdown(diff);
             if (diff === 0) {
@@ -64,24 +86,21 @@ const PaymentPage = () => {
     };
 
     const handleVNPayPayment = async () => {
-        if (!booking?.bookingId) return;
+        if (!bookingData?.bookingId) return;
 
         try {
             setLoading(true);
             setError(null);
 
-            // Goi API tao VNPAY payment URL
-            const response = await paymentApi.createVNPayUrl(booking.bookingId);
+            const response = await paymentApi.createVNPayUrl(bookingData.bookingId);
             const data = response.data;
-
-            // Lay paymentUrl tu response
             const paymentUrl = data?.data?.paymentUrl || data?.paymentUrl;
 
             if (!paymentUrl) {
                 throw new Error('Khong nhan duoc URL thanh toan tu server');
             }
 
-            // Redirect sang VNPAY
+            // sessionStorage se duoc xoa sau khi PaymentResultPage xu ly xong
             window.location.href = paymentUrl;
         } catch (err) {
             console.error('Payment error:', err);
@@ -92,7 +111,7 @@ const PaymentPage = () => {
     };
 
     const handleCancel = async () => {
-        const code = bookingData?.bookingCode || booking?.bookingCode;
+        const code = bookingData?.bookingCode;
         if (code) {
             try {
                 setLoading(true);
@@ -101,18 +120,18 @@ const PaymentPage = () => {
                 // Booking co the da bi huy hoac het han, bo qua loi
             }
         }
+        sessionStorage.removeItem('pendingPayment');
         navigate('/', { replace: true });
     };
 
     if (!booking) return null;
 
-    const bookingData = booking?.data || booking;
     const seatLabels = selectedSeats?.map(s => s.seatLabel || s.seatCode).join(', ') || '';
     const finalAmount = bookingData?.finalAmount || total || 0;
 
     return (
         <div className="min-h-screen py-8 px-4 md:px-8">
-            <div className="max-w-[700px] mx-auto">
+            <div className="max-w-175 mx-auto">
 
                 {/* Back button */}
                 <button
